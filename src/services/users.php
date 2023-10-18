@@ -1,14 +1,15 @@
 <?php
 
-class Users extends Api_configuration {
- 
+class Users extends Api_configuration
+{
+
     public function create(
         string $name,
         string $email,
         string $password,
         string $position
     ) {
-    
+
         $values = '
         "' . $name . '",
         "' . $email . '",
@@ -22,7 +23,7 @@ class Users extends Api_configuration {
             $slug = $this->slugify($create_user . '-' . $name);
             $sql = 'UPDATE `users` SET `slug` = "' . $slug . '" WHERE `id` = ' . $create_user;
             $this->db_update($sql);
-    
+
             return [
                 'id' => (int) $create_user,
                 'name' => $name,
@@ -36,7 +37,7 @@ class Users extends Api_configuration {
         }
     }
 
-    public function read() 
+    public function read()
     {
         $sql = 'SELECT `id`, `name`, `email`,`position`, `slug` FROM `users`';
         $get_users = $this->db_read($sql);
@@ -59,7 +60,7 @@ class Users extends Api_configuration {
 
     public function read_by_slug(
         string $slug
-    ){
+    ) {
         $sql = 'SELECT `id`, `name`, `email`, `position`, `slug` FROM `users` WHERE `slug` = "' . $slug . '"';
         $get_users = $this->db_read($sql);
         if ($this->db_num_rows($get_users) > 0) {
@@ -69,12 +70,11 @@ class Users extends Api_configuration {
         } else {
             return [];
         }
-
     }
 
     private function read_by_id(
         int $id
-    ){
+    ) {
         $sql = 'SELECT `id`, `name`, `email`, `position`, `slug` FROM `users` WHERE `id` = "' . $id . '"';
         $get_users = $this->db_read($sql);
         if ($this->db_num_rows($get_users) > 0) {
@@ -84,9 +84,8 @@ class Users extends Api_configuration {
         } else {
             return [];
         }
-
     }
-        
+
     public function update(
         int $id,
         string $name,
@@ -96,24 +95,23 @@ class Users extends Api_configuration {
         $old_user = $this->read_by_id($id);
         if ($old_user) {
             $sql = 'UPDATE `users` SET `name` = "' . $name . '" , `email` = "' . $email . '" , `position` = "' . $position . '" , `slug` = "' . $this->slugify($id . '-' . $name) . '"  WHERE `id` = "' . $id .  '"';
-        if ($this->db_update($sql)) {
-            return [
-                'old_user' => $old_user,
-                'new_user' => [
-                    'id' => $id,
-                    'name' => $name,
-                    'email' => $email,
-                    'position' => $position,
-                    'slug' => $this->slugify($id . '-' . $name)
-                ]
-            ];
+            if ($this->db_update($sql)) {
+                return [
+                    'old_user' => $old_user,
+                    'new_user' => [
+                        'id' => $id,
+                        'name' => $name,
+                        'email' => $email,
+                        'position' => $position,
+                        'slug' => $this->slugify($id . '-' . $name)
+                    ]
+                ];
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
-        } else {
-            return false;
-        }
-        
     }
 
     public function delete(
@@ -123,16 +121,14 @@ class Users extends Api_configuration {
         if ($old_user) {
             $sql = 'DELETE FROM `users` WHERE `slug` = "' . $slug . '"';
             if ($this->db_delete($sql)) {
-            return [
-                'old_user' => $old_user
-            ];
+                return [
+                    'old_user' => $old_user
+                ];
             } else {
                 return false;
-            } 
+            }
         } else {
             return false;
         }
-
     }
 }
-

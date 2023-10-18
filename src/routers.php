@@ -10,7 +10,7 @@ if (isset($_GET['url'])) {
 
         $me = new Me();
 
-         if ($url[1] == 'login') {
+        if ($url[1] == 'login') {
             if (!$authorization) {
                 http_response_code(401);
                 exit;
@@ -21,7 +21,7 @@ if (isset($_GET['url'])) {
             );
             if ($response) {
                 $api->generate_user_log(
-                    $response ['user']['id'],
+                    $response['user']['id'],
                     'login'
                 );
                 http_response_code(200);
@@ -51,8 +51,8 @@ if (isset($_GET['url'])) {
         if ($url[0] == 'users') {
             require_once 'src/services/users.php';
             $users = new Users();
-           
-            if (!isset($url[1])){ //read
+
+            if (!isset($url[1])) { //read
                 $users->user_id = $user;
                 $response = $users->read(
                     (isset($_GET['position']) ? ['position' => addslashes($_GET['position'])] : [])
@@ -67,14 +67,13 @@ if (isset($_GET['url'])) {
                 } else {
                     http_response_code(400);
                 }
-    
-            }else if ($url[1] == 'create') {
-                $response = $users->create(    
-                addslashes($request->name),
-                addslashes($request->email),
-                addslashes($request->password),
-                addslashes($request->position)
-    
+            } else if ($url[1] == 'create') {
+                $response = $users->create(
+                    addslashes($request->name),
+                    addslashes($request->email),
+                    addslashes($request->password),
+                    addslashes($request->position)
+
                 );
                 if ($response) {
                     $api->generate_user_log(
@@ -95,11 +94,11 @@ if (isset($_GET['url'])) {
                     addslashes($request->position)
                 );
                 if ($response) {
-                        $api->generate_user_log(
-                            $api->user_id,
-                            'users.update',
-                            json_encode($response)
-                        );
+                    $api->generate_user_log(
+                        $api->user_id,
+                        'users.update',
+                        json_encode($response)
+                    );
                     http_response_code(200);
                     echo json_encode(['User updated']);
                 } else {
@@ -107,7 +106,7 @@ if (isset($_GET['url'])) {
                     echo json_encode(['This id does not exist or invalid URL']);
                 }
             } else if ($url[1] == 'delete') {
-                $response = $users->delete (
+                $response = $users->delete(
                     addslashes($url[2])
                 );
                 if ($response) {
@@ -144,7 +143,6 @@ if (isset($_GET['url'])) {
     } else {
         http_response_code(401);
     }
-
 } else {
     echo json_encode([
         'message' => 'server running',

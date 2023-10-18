@@ -1,5 +1,6 @@
 <?php
-class API_configuration {
+class API_configuration
+{
     private $connection;
     private $api_token;
     protected $today;
@@ -7,7 +8,8 @@ class API_configuration {
     public string $token = "";
     public int $user_id = 0;
 
-    function __construct() {
+    function __construct()
+    {
         if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "192.168.2.20") {
             $server = "localhost";
             $user = "root";
@@ -16,13 +18,12 @@ class API_configuration {
             $api_token = "SECRET_KEY";
             $connection = mysqli_connect($server, $user, $password, $db_name);
             mysqli_set_charset($connection, "utf8");
-
         } else {
             $server = "localhost";
             $db_name = "";
             $user = "";
             $password = "";
-            $api_token= "";
+            $api_token = "";
             $connection = mysqli_connect($server, $user, $password, $db_name);
         }
 
@@ -32,7 +33,8 @@ class API_configuration {
         $this->now = date("Y-m-d H:i:s");
     }
 
-    protected function db_create($sql) {
+    protected function db_create($sql)
+    {
         if (mysqli_query($this->connection, $sql)) {
             return mysqli_insert_id($this->connection);
         } else {
@@ -40,7 +42,8 @@ class API_configuration {
         }
     }
 
-    protected function db_update($sql) {
+    protected function db_update($sql)
+    {
         if (mysqli_query($this->connection, $sql)) {
             return true;
         } else {
@@ -48,7 +51,8 @@ class API_configuration {
         }
     }
 
-    protected function db_delete($sql) {
+    protected function db_delete($sql)
+    {
         if (mysqli_query($this->connection, $sql)) {
             return true;
         } else {
@@ -56,12 +60,14 @@ class API_configuration {
         }
     }
 
-    protected function db_read($sql) {
+    protected function db_read($sql)
+    {
         $query = mysqli_query($this->connection, $sql);
         return $query;
     }
 
-    protected function db_set($sql) {
+    protected function db_set($sql)
+    {
         if (mysqli_query($this->connection, $sql)) {
             return true;
         } else {
@@ -69,19 +75,23 @@ class API_configuration {
         }
     }
 
-    protected function db_object($query_result) {
+    protected function db_object($query_result)
+    {
         return mysqli_fetch_object($query_result);
     }
 
-    protected function db_array($query_result) {
+    protected function db_array($query_result)
+    {
         return mysqli_fetch_array($query_result);
     }
 
-    protected function db_assoc($query_result) {
+    protected function db_assoc($query_result)
+    {
         return mysqli_fetch_assoc($query_result);
     }
 
-    protected function db_num_rows($query_result) {
+    protected function db_num_rows($query_result)
+    {
         return mysqli_num_rows($query_result);
     }
 
@@ -177,13 +187,15 @@ class API_configuration {
         return $string;
     }
 
-    protected function upload_image(string $image, string $name) {
+    protected function upload_image(string $image, string $name)
+    {
         $path = "public/images/" . $name;
         $this->base64_to_jpeg($image, $path);
         return $name;
     }
 
-    protected function delete_image(string $name) {
+    protected function delete_image(string $name)
+    {
         $path = "public/images/" . $name;
         if (file_exists($path)) {
             unlink($path);
@@ -193,7 +205,8 @@ class API_configuration {
         }
     }
 
-    private function base64_to_jpeg($base64_string, $output_file) {
+    private function base64_to_jpeg($base64_string, $output_file)
+    {
         $ifp = fopen($output_file, 'wb');
         $data = explode(',', $base64_string);
         fwrite($ifp, base64_decode($data[1]));
@@ -201,7 +214,8 @@ class API_configuration {
         return $output_file;
     }
 
-    protected function base64_to_file(string $base64, string $output_file) {
+    protected function base64_to_file(string $base64, string $output_file)
+    {
         $ifp = fopen($output_file, 'wb');
         $data = explode(',', $base64);
         fwrite($ifp, base64_decode($data[1]));
@@ -209,7 +223,8 @@ class API_configuration {
         return $output_file;
     }
 
-    protected function real_to_float($value) {
+    protected function real_to_float($value)
+    {
         $num = str_replace('R$', '', $value);
         $num = str_replace(' ', '', $num);
         $num = str_replace('.', '', $num);
@@ -217,7 +232,8 @@ class API_configuration {
         return floatval($num);
     }
 
-    public function authorization(string $type = "user") {
+    public function authorization(string $type = "user")
+    {
         if ($type == "user") {
             $sql_token = str_replace("Bearer ", "", $this->token);
             $sql = 'SELECT `user_id`, `expires` FROM `api_sessions` WHERE `token` = "' . addslashes($sql_token) . '"';

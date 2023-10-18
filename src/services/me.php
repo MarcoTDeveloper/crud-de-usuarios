@@ -1,8 +1,9 @@
 <?php
-class Me extends API_configuration {
+class Me extends API_configuration
+{
     private function generate_token(
         string $user_id
-        ) {
+    ) {
         $token = md5($user_id . uniqid(rand(), true));
         $expiration_date = date("Y-m-d H:i:s", strtotime("+10 hours"));
         $sql = 'SELECT `id` FROM `api_sessions` WHERE `user_id` = ' . $user_id;
@@ -17,8 +18,9 @@ class Me extends API_configuration {
     }
 
     public function login(
-        string $email, string $password
-        ) {
+        string $email,
+        string $password
+    ) {
         $sql = 'SELECT * FROM `users` WHERE `email` = "' . $email . '"';
         $get_user_data = $this->db_read($sql);
         if ($this->db_num_rows($get_user_data) == 1) {
@@ -27,7 +29,7 @@ class Me extends API_configuration {
                 if ($user_data->status == 'false') {
                     return false;
                 }
-                
+
                 // get user permissions
                 $sql = 'SELECT `permission` FROM `users_permissions` WHERE `user_id` = ' . $user_data->id . ' AND `status` = "true"';
                 $get_user_permissions = $this->db_read($sql);
@@ -52,12 +54,12 @@ class Me extends API_configuration {
         }
     }
 
-    public function logout(string $token) {
+    public function logout(string $token)
+    {
         $sql = 'SELECT `id` FROM `api_sessions` WHERE `token` = "' . $token . '"';
         $get_user_token_data = $this->db_read($sql);
         if ($this->db_num_rows($get_user_token_data) == 0) {
             return false;
-
         }
         $sql_token = str_replace("Bearer ", "", $token);
         $sql = 'DELETE FROM `api_sessions` WHERE `token` = "' . $sql_token . '"';
@@ -66,10 +68,10 @@ class Me extends API_configuration {
         } else {
             return false;
         }
-        
     }
 
-    public function session(string $email) {
+    public function session(string $email)
+    {
         $sql = 'SELECT `id`, `name`, `position`, `avatar` FROM `users` WHERE `email` = "' . $email . '"';
         $get_user_data = $this->db_read($sql);
         if ($this->db_num_rows($get_user_data) > 0) {
