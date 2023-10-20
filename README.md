@@ -4,7 +4,7 @@
 
 - **Para rodar a API em sua máquina siga os seguintes passos:**
 
-  - Clone o diretório (`git clone https://github.com/sharpSolucoes/pj24-00-api-rest-v2.git`) em seu `htdocs` ou em uma pasta que você consiga rodar;
+  - Clone o diretório (`git clone https://github.com/MarcosDevPF/crud-de-usuarios.git`) em seu `htdocs` ou em uma pasta que você consiga rodar;
   - Importar o arquivo `database_demo.sql` para o seu banco de dados;
 
 - **Informações sobre a API**
